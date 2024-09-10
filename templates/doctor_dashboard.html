@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+
+</head>
+<body>
+    {% if messages %}
+    <div class="alert alert-info" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="container mt-4">
+        <h1>Doctor Dashboard</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ doctor.user.username }}</h2>
+            </div>
+            <div class="card-body">
+                {% if doctor.profile_image %}
+                <img src="{{ doctor.profile_image.url }}" alt="Doctor Image" class="img-fluid mb-3" style="max-width: 200px;">
+                {% else %}
+                <p>No image available</p>
+                {% endif %}
+                
+                <ul>
+                    {% for availability in doctor.availabilities.all %}
+                        <li>{{ availability.day_of_week }}: {{ availability.start_time }} - {{ availability.end_time }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h3>Specialities</h3>
+                <p>{{ doctor.specialization }}</p>
+    
+                <h3>Phone Number</h3>
+                <p>{{ doctor.phone_number }}</p>
+    
+                <h3>Consultation Fee</h3>
+                <p>{{ doctor.consultation_fee }}</p>
+                
+                <!-- Placeholder for appointment view functionality -->
+                View <a href="{% url 'pending_requests' %}">Pending Requests</a><br>
+                <a href="{% url 'update_doctor_profile' %}">Update Profile</a><br>
+                View <a href="{% url 'accepted_requests' %}">Accepted Requests</a><br>
+                View <a href="{% url 'doctor_canceled_appointment' %}"> Canceled Appointments</a><br>
+                Delete any of Your <a href="{% url 'manage_availability' %}">Availability</a><br>
+                <a href="{% url 'doctor_logout' %}" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

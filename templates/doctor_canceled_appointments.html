@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canceled Appointments</title>
+</head>
+<body>
+    <h1>Canceled Appointments</h1>
+    {% if canceled_appointments %}
+    <p>Found {{ canceled_appointments.count }} canceled appointment(s).</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Appointment Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in canceled_appointments %}
+            <tr>
+                <td>{{ appointment.patient.user.username }}</td>
+                <td>{{ appointment.appointment_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No canceled appointments.</p>
+    {% endif %}
+    <a href="{% url 'doctor_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

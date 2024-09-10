@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Sign-Up</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Doctor Sign-Up</h1>
+
+        <!-- Display messages -->
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Sign-Up Form -->
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+                {% if username_taken %}
+                    <small class="form-text text-danger">Username is already taken.</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number">Phone Number:</label>
+                <input type="tel" id="phone_number" name="phone_number" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="specialization">Specialization:</label>
+                <input type="text" id="specialization" name="specialization" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="consultation_fee">Consultation Fee:</label>
+                <input type="number" id="consultation_fee" name="consultation_fee" step="0.01" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <p>click button given below to add your availability for multiple days</p>
+                <button type="button" id="add-availability" class="btn btn-secondary">Add Availability</button>
+            </div>
+        
+            <!-- Availability Entries -->
+            <div id="availability-wrapper">
+                <div class="availability-entry">
+                    <div class="form-group">
+                        <label for="day_of_week_0">Day of Week</label>
+                        <select id="day_of_week_0" name="day_of_week" class="form-control">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time_0">Start Time</label>
+                        <input type="time" id="start_time_0" name="start_time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time_0">End Time</label>
+                        <input type="time" id="end_time_0" name="end_time" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+       
+            <div class="form-group">
+                <label for="profile_image">Profile Image:</label>
+                <input type="file" id="profile_image" name="profile_image" accept="image/*" class="form-control-file">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button><br>
+            <a href="{% url 'doctor_login' %}">Already Registered? Login</a>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle adding new availability entries
+            let availabilityWrapper = document.getElementById('availability-wrapper');
+            let addAvailabilityButton = document.getElementById('add-availability');
+            let entryIndex = 1; 
+    
+            addAvailabilityButton.addEventListener('click', function () {
+                // Create a new availability entry
+                let newEntry = document.createElement('div');
+                newEntry.className = 'availability-entry';
+                newEntry.innerHTML = `
+                    <div class="form-group">
+                        <label for="day_of_week_${entryIndex}">Day of Week</label>
+                        <select id="day_of_week_${entryIndex}" name="day_of_week" class="form-control">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time_${entryIndex}">Start Time</label>
+                        <input type="time" id="start_time_${entryIndex}" name="start_time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time_${entryIndex}">End Time</label>
+                        <input type="time" id="end_time_${entryIndex}" name="end_time" class="form-control" required>
+                    </div>
+                `;
+    
+                // Append the new entry to the wrapper
+                availabilityWrapper.appendChild(newEntry);
+    
+                // Increment the entry index for the next entry
+                entryIndex++;
+            });
+        });
+    </script>
+</body>
+</html>

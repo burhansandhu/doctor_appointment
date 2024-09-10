@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Doctor</title>
+</head>
+<body>
+    <form method="get">
+        <input type="text" name="name" placeholder="Doctor Name" value="{{ request.GET.name }}">
+        <input type="text" name="specialization" placeholder="Specialization" value="{{ request.GET.specialization }}">
+        <button type="submit">Search</button>
+    </form>
+    
+    <ul>
+        {% for doctor in doctor_data %}
+            <li>
+                <h3>{{ doctor.name }} - {{ doctor.specialization }}</h3>
+                <ul>
+                    {% for availability in doctor.availabilities %}
+                        <li>{{ availability.day_of_week }}: {{ availability.start_time }} - {{ availability.end_time }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% empty %}
+            <li>No doctors found.</li>
+        {% endfor %}
+    </ul>
+    Go Back To <a href="{% url 'patient_dashboard' %}">Dashboard</a><br>
+    <a href="{% url 'appointment_request' %}">Request Appointment</a><br>
+</body>
+</html>

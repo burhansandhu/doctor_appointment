@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+</head>
+<body>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        <!-- Doctor Profile Form -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" value="{{ doctor_form_data.username }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ doctor_form_data.email }}">
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" id="phone_number" name="phone_number" class="form-control" value="{{ doctor_form_data.phone_number }}">
+        </div>
+        <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <input type="text" id="specialization" name="specialization" class="form-control" value="{{ doctor_form_data.specialization }}">
+        </div>
+        <div class="form-group">
+            <label for="consultation_fee">Consultation Fee</label>
+            <input type="number" id="consultation_fee" name="consultation_fee" class="form-control" value="{{ doctor_form_data.consultation_fee }}">
+        </div>
+        <div class="form-group">
+            <label for="profile_image">Profile Image</label>
+            <input type="file" id="profile_image" name="profile_image" class="form-control">
+        </div>
+    
+        <!-- Availability Section -->
+        <div id="availability-wrapper">
+            {% for availability in availability_entries %}
+                <div class="availability-entry">
+                    <div class="form-group">
+                        <label for="day_of_week">Day of Week</label>
+                        <select name="day_of_week" class="form-control">
+                            <option value="Monday" {% if availability.day_of_week == "Monday" %}selected{% endif %}>Monday</option>
+                            <option value="Tuesday" {% if availability.day_of_week == "Tuesday" %}selected{% endif %}>Tuesday</option>
+                            <option value="Wednesday" {% if availability.day_of_week == "Wednesday" %}selected{% endif %}>Wednesday</option>
+                            <option value="Thursday" {% if availability.day_of_week == "Thursday" %}selected{% endif %}>Thursday</option>
+                            <option value="Friday" {% if availability.day_of_week == "Friday" %}selected{% endif %}>Friday</option>
+                            <option value="Saturday" {% if availability.day_of_week == "Saturday" %}selected{% endif %}>Saturday</option>
+                            <option value="Sunday" {% if availability.day_of_week == "Sunday" %}selected{% endif %}>Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time">Start Time</label>
+                        <input type="time" name="start_time" value="{{ availability.start_time|date:'H:i' }}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time">End Time</label>
+                        <input type="time" name="end_time" value="{{ availability.end_time|date:'H:i' }}" class="form-control">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Add new availability section -->
+        <div class="form-group">
+            <button type="button" id="add-availability" class="btn btn-secondary">Add Availability</button>
+        </div>
+    
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+    Go back to <a href="{% url 'doctor_dashboard' %}"> Dashboard</a><br>
+    
+    <!-- JS to handle dynamic addition of availability fields -->
+    <script>
+    document.getElementById('add-availability').addEventListener('click', function() {
+        var wrapper = document.getElementById('availability-wrapper');
+        var entry = document.createElement('div');
+        entry.className = 'availability-entry';
+        entry.innerHTML = `
+            <div class="form-group">
+                <label for="day_of_week">Day of Week</label>
+                <select name="day_of_week" class="form-control">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="start_time">Start Time</label>
+                <input type="time" name="start_time" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="end_time">End Time</label>
+                <input type="time" name="end_time" class="form-control">
+            </div>
+        `;
+        wrapper.appendChild(entry);
+    });
+    </script>
+    
+</body>
+</html>

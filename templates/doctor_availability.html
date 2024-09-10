@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Availability</title>
+</head>
+<body>
+    <h1>Doctors Availability</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Specialization</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+                <tr>
+                    <td>Dr. {{ doctor.user.username }}</td>
+                    <td>{{ doctor.specialization }}</td>
+                    <td>
+                        {% for availability in doctor.availabilities.all %}
+                            <div>{{ availability.day_of_week }}: {{ availability.start_time|date:"H:i" }} - {{ availability.end_time|date:"H:i" }}</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'appointment_request' %}">Appointment Request</a><br>
+    <a href="{% url 'patient_dashboard' %}">Dashboard</a>
+</body>
+</html>

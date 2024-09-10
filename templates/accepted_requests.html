@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accepted Requests</title>
+</head>
+<body>
+    <h1>Accepted Appointments</h1>
+    {% if appointments %}
+    <p>Found {{ appointments.count }} accepted appointment(s).</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Day of Week</th>
+                    <th>Start Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.patient.user.username }}</td>
+                        <td>{{ appointment.appointment_date|date:"l" }}</td> <!-- Day of Week -->
+                        <td>{{ appointment.appointment_date|date:"H:i" }}</td> <!-- Start Time -->
+                        <td>
+                            <!-- Cancel and Reschedule buttons -->
+                            <form action="{% url 'doctor_cancel_appointment' appointment.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No accepted appointments.</p>
+    {% endif %}
+    Go back to <a href="{% url 'doctor_dashboard' %}">Dashboard</a>
+</body>
+</body>
+</html>

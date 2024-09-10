@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+
+</head>
+<body>
+    {% if messages %}
+    <div class="alert alert-info" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h1>Welcome to Your Dashboard, {{ patient.user.username }}!</h1>
+    
+    <div class="profile-info">
+        <h2>Your Profile</h2>
+        <p><strong>Name:</strong> {{ patient.user.username }}</p>
+        <p><strong>Email:</strong> {{ patient.user.email }}</p>
+        <p><strong>Date of Birth:</strong> {{ patient.dob }}</p> 
+        <p><strong>Phone:</strong> {{ patient.phone }}</p> 
+        <p><strong>Address:</strong> {{ patient.address }}</p>
+        <p><strong>Profile Image:</strong></p>
+        <img src="{{ patient.image.url }}" alt="Profile Image" style="width:150px;height:150px;">
+
+    </div>
+    <a href="{% url 'doctor_availability' %}">See Doctor's Availability </a><br>
+    <a href="{% url 'appointment_request' %}">Appointment Request</a><br>
+    See your <a href="{% url 'view_requests' %}">Requests</a><br>
+    <a href="{% url 'search_doctor' %}">Search Doctor</a><br>
+    <a href="{% url 'patient_update' %}">Update Profile</a><br>
+    <a href="{% url 'patient_password_reset' %}">Reset Password</a><br>
+    <a href="{% url 'patient_logout' %}">Logout</a>
+</body>
+</html>

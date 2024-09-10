@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Availability</title>
+</head>
+<body>
+    <h1>Manage Your Availability</h1>
+    
+    <table class="table" border="1">
+        <thead>
+            <tr>
+                <th>Day of Week</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for availability in doctor.availabilities.all %}
+            <tr>
+                <td>{{ availability.day_of_week }}</td>
+                <td>{{ availability.start_time|date:"H:i" }}</td>
+                <td>{{ availability.end_time|date:"H:i" }}</td>
+                <td>
+                    <form action="{% url 'delete_availability' availability.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No availability slots available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    Go back to <a href="{% url 'doctor_dashboard' %}">Dashboard</a><br>
+</body>
+</html>
