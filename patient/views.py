@@ -88,6 +88,23 @@ def patient_update(request):
     return render(request, 'patient_update.html', context)
     
 
+def assign_token_number(doctor, date):
+    # Get existing appointments for the given doctor and date
+    existing_appointments = models.Appointment.objects.filter(
+        doctor=doctor,
+        appointment_date__date=date
+    )
+    
+    if not existing_appointments.exists():
+        # No appointments for this date, assign token number 1
+        return 1
+    else:
+        # Get the highest token number and return the next number
+        highest_token = existing_appointments.order_by('-token_number').first().token_number
+        return highest_token + 1
+
+
+
 @login_required(login_url='/patient/Plogin/')
 def request_appointment(request):
     if request.method == 'POST':
@@ -118,16 +135,19 @@ def request_appointment(request):
         if appointment_datetime.time() < availability.start_time or appointment_datetime.time() > availability.end_time:
             messages.error(request, f'The selected time is outside Dr. {doctor.user.username}\'s available hours on {appointment_day}.')
             return redirect('appointment_request')
+        
+        token_number = assign_token_number(doctor, appointment_datetime)
 
         models.Appointment.objects.create(
             doctor=doctor,
             patient=patient,
             appointment_date=appointment_datetime,
+            token_number=token_number,
             status='PENDING'
         )
 
         subject = 'New Appointment Request'
-        message = f'You have a new appointment request from {patient.user.username} on {appointment_datetime.strftime("%Y-%m-%d %H:%M:%S")}.'
+        message = f'You have a new appointment request from {patient.user.username} on {appointment_datetime.strftime("%Y-%m-%d %H:%M:%S")}  with token number {token_number}.'
         recipient_list = [doctor.user.email]
         from_email = patient.user.email
 
@@ -216,6 +236,17 @@ def search_doctor(request):
 
     return render(request, 'search_doctor.html', {'doctor_data': doctor_data})
 
+
+@login_required(login_url='/patient/Plogin/')
+def delete_appointment(request, appointment_id):
+    appointment = get_object_or_404(models.Appointment, id=appointment_id, patient__user=request.user)
+    
+    if request.method == 'POST':
+        appointment.delete()
+        messages.success(request, 'Appointment request deleted successfully.')
+        return redirect('view_requests')
+    
+    return render(request, 'confirm_delete.html', {'appointment': appointment})
 
 
 @login_required(login_url='/patient/Plogin/')

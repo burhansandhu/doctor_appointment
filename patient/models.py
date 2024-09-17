@@ -28,6 +28,7 @@ class Appointment(models.Model):
     appointment_date = models.DateTimeField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
+    token_number = models.PositiveIntegerField(null=True, blank=True)
     #rescheduled_to = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
